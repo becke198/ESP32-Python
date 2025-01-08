@@ -1,0 +1,42 @@
+from machine import Pin, SoftI2C
+import ssd1306
+from time import sleep
+
+# Initialize the OLED display
+i2c = SoftI2C(scl=Pin(35), sda=Pin(34))
+oled_width = 128
+oled_height = 64
+oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
+
+# Rectangle dimensions
+rect_width = 32
+rect_height = 32
+
+# Animate the rectangle
+while True:
+    for height in range(0, oled_height - rect_height + 1):
+        oled.fill(0)  # Clear the screen
+
+        # Draw the outer and inner rectangles
+        oled.fill_rect(0, height, rect_width, rect_height, 1)
+        oled.fill_rect(2, height + 2, rect_width - 4, rect_height - 4, 0)
+
+        # Draw additional shapes inside the rectangle
+        oled.vline(9, height + 8, 22, 1)
+        oled.vline(16, height + 2, 22, 1)
+        oled.vline(23, height + 8, 22, 1)
+        oled.fill_rect(26, height + 24, 2, 4, 1)
+
+        # Display text (optional)
+        oled.text('MicroPython', 40, 0, 1)
+        oled.text('SSD1306', 40, 12, 1)
+        oled.text('OLED 128x64', 40, 24, 1)
+
+        # Show the updated frame
+        oled.show()
+
+        # Pause to slow down the animation
+        sleep(0.02)
+
+    sleep(1)  # Pause at the bottom for 2 seconds
+
